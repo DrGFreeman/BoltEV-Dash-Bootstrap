@@ -1,4 +1,5 @@
 import dash
+import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
@@ -61,7 +62,7 @@ layout = html.Div(
     style={"max-width": "1200px", "margin": "auto"}
 )
 
-app = dash.Dash(__name__)
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.FLATLY])
 app.title = "Bolt EV"
 
 app.layout = layout
