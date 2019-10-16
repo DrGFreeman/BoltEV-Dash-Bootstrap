@@ -8,58 +8,100 @@ import plotly_express as px
 
 days = pd.read_csv("data/data.csv")
 
+dash_link = html.A("Plotly Dash", href="https://plot.ly/dash/")
+dbc_link = html.A("Dash-Bootstrap-Components", href="https://dash-bootstrap-components.opensource.faculty.ai/")
+damdlbt_link = html.A("Damien de la Bruère-Terreault", href="https://github.com/DamdlBT/BoltEV-Dash")
+
+lead_text = "Données de consommation énergétique d'une voiture Chevrolet Bolt EV 100% électrique utilisée au Québec."
+
+navbar = dbc.NavbarSimple(
+    children=[
+        dbc.NavItem(dbc.NavLink("Code source sur GitHub", href="https://github.com/DrGFreeman/BoltEV-Dash-Bootstrap"))
+    ],
+    brand="BOLT EV - Efficacité et Autonomie",
+    color="primary",
+    dark=True
+)
+
 layout = html.Div(
     children=[
-        html.H1("Bolt EV - Efficacité et Autonomie"),
-        html.Hr(),
-        html.Div(
+        navbar,
+        dbc.Container(
             children=[
-                html.Label('Variable x'),
-                dcc.Dropdown(
-                    id="x",
-                    options=[
-                        {"label": c, "value": c} for c in sorted(days.columns)
-                    ],
-                    placeholder="choisir la variable",
-                    value="date",
+                dbc.Row(
+                    dbc.Col(
+                        children=[
+                            html.P(lead_text, className="lead"),
+                        ],
+                    ),
                 ),
-                html.Label('Variable y'),
-                dcc.Dropdown(
-                    id="y",
-                    options=[
-                        {"label": c, "value": c} for c in sorted(days.columns)
-                    ],
-                    placeholder="choisir la variable",
-                    value="consommation (kWh/100km)",
+                dbc.Row(
+                    children=[
+                        dbc.Col([
+                            html.Label('Variable x'),
+                            dcc.Dropdown(
+                                id="x",
+                                options=[
+                                    {"label": c, "value": c} for c in sorted(days.columns)
+                                ],
+                                placeholder="choisir la variable",
+                                value="date",
+                            )],
+                            width=4
+                        ),
+                        dbc.Col([
+                            html.Label('Variable y'),
+                            dcc.Dropdown(
+                                id="y",
+                                options=[
+                                    {"label": c, "value": c} for c in sorted(days.columns)
+                                ],
+                                placeholder="choisir la variable",
+                                value="consommation (kWh/100km)",
+                            )],
+                            width=4
+                        ),
+                        dbc.Col([
+                            html.Label('Variable couleur'),
+                            dcc.Dropdown(
+                                id="couleur",
+                                options=[
+                                    {"label": c, "value": c} for c in sorted(days.columns)
+                                ],
+                                placeholder="choisir la variable",
+                                value="temp. ext. moyenne (deg.C)",
+                            )],
+                            width=4
+                        ),
+                    ]
                 ),
-                html.Label('Variable couleur'),
-                dcc.Dropdown(
-                    id="couleur",
-                    options=[
-                        {"label": c, "value": c} for c in sorted(days.columns)
-                    ],
-                    placeholder="choisir la variable",
-                    value="temp. ext. moyenne (deg.C)",
+                dbc.Row(
+                    dbc.Col([
+                        dcc.Graph(id="graph")
+                    ])
                 ),
+                html.Hr(),
+                dbc.Row(
+                    dbc.Col(
+                        children=[
+                            html.Div(
+                                children=[
+                                    html.P([
+                                        "Basée sur la démo d'application utilisant ", dash_link,
+                                        " par ", damdlbt_link , ".",
+                                        " Cette version utilise le module ", dbc_link,
+                                        " pour les styles CSS."],
+                                        className="small"
+                                    ),
+                                ]
+                            ),
+                        ],
+                    ),
+                ),  
             ],
-            style={"width": "25%", "display": "inline-block", "float": "left" }
+            className="mt-5"
         ),
-        html.Div(
-            children=[
-                dcc.Graph(id="graph")
-            ],
-            style={"width": "75%", "display": "inline-block",}
-        ),
-        html.Hr(),
-        html.Div(
-            children=[
-                html.Div(["Démo d'application utilisant ", html.A("Plotly Dash", href="https://plot.ly/dash/"), " par Damien de la Bruère-Terreault."]),
-                html.A("Code source sur GitHub",  href="https://github.com/DamdlBT/BoltEV-Dash"),
-            ],
-            style={"text-align": "center"}
-        )
     ],
-    style={"max-width": "1200px", "margin": "auto"}
 )
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.FLATLY])
